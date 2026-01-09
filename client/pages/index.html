@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track me Beach</title>
+  
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      display: grid;
+    }
+    #map {
+      /* width: 100%; */
+      height: 100%;
+      grid-row: 1;
+      grid-column: 1;
+    }
+    #control-panel {
+      height: 100%;
+      grid-row: 1;
+      grid-column: 2;
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="control-panel">
+    <input type="range" min="100" max="1000" value="500" class="slider" id="searchRadiusSlider">
+    <p id="searchRadiusText"> </p>
+    <button id="searchButton"> Search </button>
+  </div>
+  <script>
+    const map = L.map('map').setView([44.4268, 26.1025], 13); // Mare zoom pe bucharest city (cel mai smek)
+    // const SEARCH_RADIUS = 1000; // in meters
+    var search_radius_slider = document.getElementById("searchRadiusSlider");
+    var search_radius_text = document.getElementById("searchRadiusText");
+    var search_button = document.getElementById("searchButton");
+
+    let CONFIG = {
+      SEARCH_RADIUS: search_radius_slider.value, // in meters
+      SEARCH_LIMIT: 10 // max number of pages to search for
+    }
+    search_radius_text.textContent = search_radius_slider.value.toString();
+
+    // efectiv tile urile de la osm ca nu se incarca singure gen
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+
+    function displayPoints(points) {
+      const path = L.polyline(points, { color: 'blue' }).addTo(map);
+      map.fitBounds(path.getBounds());
+    }
+
+    let user_circle, search_circle;
+    let popups = [];
+
+    let dataPoints = [];
+    async function fetchData() {
+      try {
+        const points_response = await fetch('/api');
+        const point_data = await points_response.json(); 
+        console.log('Am primit:', point_data);
+        const first_point = point_data.locations[0].point;
+        user_circle = L.circle(first_point, {
+          color: 'red',
+          fillColor: 'red',
+          radius: 50 // also in meters
+        }).addTo(map);
+
+        search_circle = L.circle(first_point, {
+          color: 'green',
+          radius: CONFIG.SEARCH_RADIUS
+          // radius: 1000
+        }).addTo(map);
+
+        console.log(CONFIG.SEARCH_RADIUS);
+
+        const point_loc_params = new URLSearchParams({
+          lat: first_point[0],
+          lon: first_point[1],
+          radius: CONFIG.SEARCH_RADIUS,
+          limit: CONFIG.SEARCH_LIMIT
+        });
+        const wiki_response = await fetch(`/api/get_wikis?${point_loc_params}`);
+        const wiki_data = await wiki_response.json();
+        console.log('Got from wiki', wiki_data);
+        // const response = await fetch('/api/')
+
+        for (let id in wiki_data.query.pages) {
+          const page = wiki_data.query.pages[id];
+          console.log(page);
+          const location = [ page.coordinates[0].lat, page.coordinates[0].lon ];
+          // popups.push(L.marker(location).addTo(map).bindPopup(`<b>${page.title}</b><br>${page.description}<br><a href='${page.fullurl}'>Link</a>`));
+          popups.push(L.marker(location));
+          popups[popups.length-1].addTo(map).bindPopup(`<b>${page.title}</b><br>${page.description}<br><a href='${page.fullurl}'>Link</a>`);
+        }
+
+        // data.locations.forEach(location => {
+          // const point = location.point;
+          // dataPoints.push(point); 
+        // });
+        // displayPoints(dataPoints);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+
+    fetchData();
+
+    search_radius_slider.oninput = function() {
+      CONFIG.SEARCH_RADIUS = this.value;
+      search_radius_text.textContent = this.value.toString();
+    };
+
+    search_button.onclick = function() {
+      map.removeLayer(user_circle);
+      map.removeLayer(search_circle);
+      popups.forEach(popup => {
+        map.removeLayer(popup);
+      });
+      fetchData();
+    }
+
+  </script>
+</body>
+</html>
