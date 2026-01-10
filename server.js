@@ -9,13 +9,11 @@ app.get('/', (req, res) => {
 });
 
 app.use(express.static(__dirname + '/client/pages'));
-// app.get('/index.css', (req, res) => {
-  // res.sendFile(__dirname + "/client/pages/index.css");
-// });
 
 app.get('/marius.jpg', (req, res) => {
   res.sendFile(__dirname + "/client/images/marius.jpg")
 });
+
 app.get('/api', (req, res) => {
   res.json(
     {
@@ -42,7 +40,8 @@ app.get('/api', (req, res) => {
 });
 
 app.get('/api/get_wikis', async (req, res) => {
-  const wiki_params = new URLSearchParams({
+  console.log(`got api request for wiki pages around ${req.query.lat}, ${req.query.lon}`);
+  let wiki_params = {
     action: 'query',
     prop: 'coordinates|description|info',
     inprop: 'url',
@@ -51,36 +50,54 @@ app.get('/api/get_wikis', async (req, res) => {
     ggslimit: req.query.limit,
     ggscoord: req.query.lat + "|" + req.query.lon,
     format: 'json'
-  });
-  const wiki_api_url = `https://en.wikipedia.org/w/api.php?${wiki_params}`;
-  console.log(wiki_api_url);
+  };
+  // let wiki_params_text = new URLSearchParams(wiki_params);
+  // let wiki_api_url = `https://en.wikipedia.org/w/api.php?${wiki_params_text}`;
+  // console.log(wiki_api_url);
   
+  let result_data = {};
+  let continue_query_params = {};
   try {
-    const wiki_response = await fetch(wiki_api_url);
-    const data = await wiki_response.json();
-    res.json(data);
+    do {
+      // add the continue params necessary to the query params
+      // if we don't have continue params, nothing will be appended
+      wiki_params = {
+        ...wiki_params,
+        ...continue_query_params
+      };
+      const wiki_params_url_text = new URLSearchParams(wiki_params);
+      const wiki_api_url = `https://en.wikipedia.org/w/api.php?${wiki_params_url_text}`;
+      const wiki_response = await fetch(wiki_api_url);
+      const data = await wiki_response.json();
+
+      // append all the new info about the pages from 'data' into 'result_data'
+      // go through all the pages gotten from the query
+      for (const [pageID, pageData] of Object.entries(data.query.pages)) {
+        result_data[pageID] = {
+          ...(result_data[pageID] ?? {}), // if we already have the page, add it
+          ...pageData // add the new data (it will automatically overwrite any copies)
+        };
+      }
+
+      if (data.hasOwnProperty('continue')) {
+        continue_query_params = data.continue;
+        console.log("query is continued!");
+      } else {
+        continue_query_params = null;
+      }
+
+    } while (continue_query_params);
+
+    res.json(result_data);
+
   } catch (error) {
     res.status(500).json( {
       error: `API fetch failed for ${req.query.lat} and ${req.query.lon}`,
+      error_message: `${error}`,
       wiki_url: wiki_api_url
     } );
   }
 })
-
-app.get('/api2', (req, res) => {
-  res.json(
-    {
-      "name": "Andy",
-      "age": "100",
-      "hobbies": [
-        "having fun",
-        "anime",
-        "idk bro"
-      ]
-    }
-  );
-});
-
 
 const server = http.createServer(app);
 

@@ -67,8 +67,8 @@ async function fetchData() {
         const wiki_data = await wiki_response.json();
         console.log('Got from wiki', wiki_data);
 
-        for (let id in wiki_data.query.pages) {
-            const page = wiki_data.query.pages[id];
+        for (let id in wiki_data) {
+            const page = wiki_data[id];
             const location = [ page.coordinates[0].lat, page.coordinates[0].lon ];
 
             popups.push(L.marker(location));
