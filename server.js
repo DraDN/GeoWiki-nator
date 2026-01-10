@@ -8,6 +8,11 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + "/client/pages/index.html")
 });
 
+app.use(express.static(__dirname + '/client/pages'));
+// app.get('/index.css', (req, res) => {
+  // res.sendFile(__dirname + "/client/pages/index.css");
+// });
+
 app.get('/marius.jpg', (req, res) => {
   res.sendFile(__dirname + "/client/images/marius.jpg")
 });
@@ -51,13 +56,9 @@ app.get('/api/get_wikis', async (req, res) => {
   console.log(wiki_api_url);
   
   try {
-    // fetch(wiki_api_url).then(response => response.json()).then(data => res.json=data);
     const wiki_response = await fetch(wiki_api_url);
     const data = await wiki_response.json();
     res.json(data);
-    // res.json( {
-      // "test": "test"
-    // });
   } catch (error) {
     res.status(500).json( {
       error: `API fetch failed for ${req.query.lat} and ${req.query.lon}`,

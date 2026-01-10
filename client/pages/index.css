@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+/* import Roboto font */
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.main-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+}
+
+#map {
+    width: 70%;
+    height: 100%;
+}
+
+#control-panel {
+    font-size: 1.5rem;
+
+    width: 30%;
+
+    margin: 1em;
+    margin-top: 2em;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.control-slider {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 2em;
+    gap: 1em;
+}
+
+.control-label {
+    font-weight: bold;
+}
+
+.control-value {
+    font-weight: lighter;
+    font-style: italic;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.control-value input[type="range"] {
+    flex: 1;
+    min-width: 0;
+}
+
+.control-value input[type="number"] {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 1em;
+}
+
+#searchButton {
+    font-size: 1em;
+}
+
+@media (max-width: 600px) {
+    html, body {
+        height: auto;
+    }
+
+    .main-container {
+        flex-direction: column;
+        height: 100%;
+    }
+
+    #control-panel {
+        width: auto;
+    }
+
+    #map {
+        height: 90vh;
+        width: 100vw;
+    }
+}
