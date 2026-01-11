@@ -7,42 +7,56 @@
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="/index.css">
 </head>
 <body>
   <div class="main-container">
-    <div id="map"></div>
+    <div class="crt-screen" id="map-container">
+      <div id="map"></div>
+    </div>
 
     <!-- search radius slider -->
-    <div id="control-panel">
-      <div class="control-slider">
-        <span class="control-label"> Search radius: </span>
-        <input type="range" min="100" max="1000" value="500" class="slider" id="searchRadiusSlider">
+    <div id="control-panel" class="crt-screen">
+      <span class="glow-text title"> Search Settings </span>
+      <hr class="glow">
+
+      <div class="control-slider-block glow-text">
+        <span class="control-label"> Radius: </span>
+
+        <input type="range" min="100" max="1000" value="500" step="10" class="control-slider glow" id="searchRadiusSlider">
         <div class="control-value">
           <!-- <span id="searchRadiusText"> </span><span> meters</span> -->
-          <input type="number" min="100" max="1000" value="500" id="searchRadiusText">
+          <input class="glow-text glow" type="number" min="100" max="1000" value="500" id="searchRadiusText">
           <span> meters</span>
         </div>
         </span>
       </div>
 
       <!-- search limit slider -->
-      <div class="control-slider">
-        <span class="control-label"> Search limit: </span>
+      <div class="control-slider-block glow-text">
+        <span class="control-label"> Limit: </span>
 
-        <input type="range" min="1" max="400" value="10" class="slider" id="searchLimitSlider">
+        <input type="range" min="1" max="400" value="10" step="1" class="control-slider glow" id="searchLimitSlider">
         <div class="control-value">
           <!-- <span id="searchLimitText"> </span><span> articles</span> -->
-          <input type="number" min="1" max="400" value="10" id="searchLimitText">
+          <input class="glow-text glow" type="number" min="1" max="400" value="10" id="searchLimitText">
           <span> articles</span>
         </div>
       </div>
 
       <!-- search submit button -->
-      <button id="searchButton"> Search </button>
+      <button class="glow" id="searchButton"> Search </button>
+
+      <div class="search-status-container">
+        <span class="glow-text" id="status-label"> Search Status </span>
+        <div id="search-status-led"></div>
+      </div>
+
+      <button class="glow" id="lock-on-button"> Lock On Target </button>
     </div>
   </div>
 
+  <script src="/design-tokens.js"></script>
+  <link rel="stylesheet" href="/index.css">
   <script src="/index.js"></script>
 </body>
 </html>

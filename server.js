@@ -9,6 +9,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(express.static(__dirname + '/client/pages'));
+app.use(express.static(__dirname + '/client/images'));
 
 app.get('/marius.jpg', (req, res) => {
   res.sendFile(__dirname + "/client/images/marius.jpg")
@@ -70,6 +71,11 @@ app.get('/api/get_wikis', async (req, res) => {
       const wiki_response = await fetch(wiki_api_url);
       const data = await wiki_response.json();
 
+      // escape if query result is null
+      if (!data.hasOwnProperty('query')) {
+        break;
+      }
+
       // append all the new info about the pages from 'data' into 'result_data'
       // go through all the pages gotten from the query
       for (const [pageID, pageData] of Object.entries(data.query.pages)) {
@@ -94,7 +100,7 @@ app.get('/api/get_wikis', async (req, res) => {
     res.status(500).json( {
       error: `API fetch failed for ${req.query.lat} and ${req.query.lon}`,
       error_message: `${error}`,
-      wiki_url: wiki_api_url
+      // wiki_url: wiki_api_url
     } );
   }
 })
