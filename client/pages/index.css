@@ -1,5 +1,6 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap'); */
 /* import Roboto font */
+
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 /* import Orbitron foto */
 
@@ -29,8 +30,8 @@
 }
 
 html, body {
-    height: 100%;
-    width: 100%;
+    height: 100vh;
+    width: 100vw;
     margin: 0;
     font-family: 'Orbitron', sans-serif;
     color: var(--text-color);
@@ -45,36 +46,44 @@ html, body {
 }
 
 #map-container {
-    width: 70%;
+    width: 70vw;
+    height: 100vh;
+
+    flex: 7;
 }
 
 #map {
-    /* width: 70%; */
     height: 100%;
     border-image: url("window-border-inverse.png") 10;
     border-style: solid;
-    /* border-width: 0px 16px 0px 0px; */
     border-width: 16px;
     border-radius: 18px;
 
     box-sizing: border-box;
     position: relative;
-
-    /* filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3); */
 }
 
-#control-panel {
+#control-content {
     font-size: 1.5rem;
 
-    width: 30%;
+    flex: 1;
 
     padding: 1em;
     padding-top: 2em;
 
-    display: flex;
+    box-sizing: border-box;
+
     flex-direction: column;
     align-items: stretch;
     justify-content: center;
+    display: flex;
+}
+
+#control-panel {
+    width: 30%;
+    flex: 3;
+
+    box-sizing: border-box;
 
     background-color: var(--container-bg-color);
 
@@ -85,27 +94,27 @@ html, body {
 
     overflow-y: scroll;
     overflow-x: hidden;
+
+    display: flex;
 }
 
 .crt-screen {
-    width: 100%;
-
     position: relative;
-    /* overflow: hidden; */
 }
 
 /* crt effect */
 .crt-screen::after {
-    content: "";
+    content: " ";
+    display: block;
     background: linear-gradient(rgba(18, 16, 16, 0), rgba(0, 0, 0, 0.15) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
     background-size: 100% 2px, 3px 100%;
-
-    width: 100%;
-    height: 100%;
 
     position: absolute;
     top: 0;
     left: 0;
+    bottom: 0;
+    right: 0;
+
     pointer-events: none;
 
     z-index: 1000;
@@ -131,16 +140,10 @@ hr {
     height: 100%;
 }
 
-/* #status-label { */
-    /* margin-bottom: 1em; */
-/* } */
-
 #search-status-led {
     height: 50%;
     margin-top: 1em;
     background-color: var(--container-bg-color);
-    /* animation-name: search-status-blink; */
-    /* animation-duration: 0.1s; */
 }
 
 .blinking {
@@ -189,7 +192,6 @@ hr {
     height: 1em;
 
     background-color: var(--container-bg-color);
-    /* border-radius: 16px; */
 
     outline: none;
     cursor: pointer;
@@ -207,7 +209,6 @@ hr {
 }
 
 .control-value {
-    /* font-weight: lighter; */
     font-style: italic;
 
     display: flex;
@@ -225,14 +226,11 @@ hr {
     font-style: italic;
     font-size: 1em;
 
-    /* color: var(--text-color); */
     color: #fff;
 
-    /* background-color: var(--container-bg-color); */
     background-color: var(--text-color);
 
     border-style: solid;
-    /* border-color: var(--text-color); */
     border-color: #fff;
 }
 
@@ -240,19 +238,15 @@ hr {
     outline: none;
 }
 
-/* #searchButton { */
 button {
     font-size: 1em;
     font-weight: 800;
 
-    /* color: var(--text-color); */
     color: #fff;
-    /* background-color: var(--container-bg-color); */
     background-color: var(--text-color);
 
     border-radius: 16px;
     border-style: solid;
-    /* border-color: var(--text-color); */
     border-color: #fff;
     border-width: 3px;
 }

@@ -1,13 +1,21 @@
 const express = require('express');
 const http = require('http');
+const { Server } = require('socket.io');
 
 const app = express();
 const PORT = 6969;
 
+const server = http.createServer(app);
+const io = new Server(server);
+
+let CURRENT_LOCATION = [44.4268, 26.1025];
+
+// === HOME PAGE ===
 app.get('/', (req, res) => {
     res.sendFile(__dirname + "/client/pages/index.html")
 });
 
+// === PUBLIC STATIC FILES ===
 app.use(express.static(__dirname + '/client/pages'));
 app.use(express.static(__dirname + '/client/images'));
 
@@ -15,6 +23,7 @@ app.get('/marius.jpg', (req, res) => {
   res.sendFile(__dirname + "/client/images/marius.jpg")
 });
 
+// === API ===
 app.get('/api', (req, res) => {
   res.json(
     {
@@ -40,6 +49,7 @@ app.get('/api', (req, res) => {
     });
 });
 
+// === WIKI API WRAPPER ===
 app.get('/api/get_wikis', async (req, res) => {
   console.log(`got api request for wiki pages around ${req.query.lat}, ${req.query.lon}`);
   let wiki_params = {
@@ -103,9 +113,38 @@ app.get('/api/get_wikis', async (req, res) => {
       // wiki_url: wiki_api_url
     } );
   }
-})
+});
 
-const server = http.createServer(app);
+let index = 0;
+
+// === SOCKET CONNECTIONS FOR LOCATION UPDATE ===
+io.on('connection', (socket) => {
+  console.log('connection to socket');
+
+  socket.on('get', async (callback) => {
+    console.log(`Got GET from socket client`);
+
+    const tempdata = await fetch('http://localhost:6969/api');
+    const tempjson = await tempdata.json();
+    const temppoint = tempjson.locations[index++ %4].point;
+
+    callback({
+      // location: CURRENT_LOCATION
+      location: temppoint
+    });
+    console.log("sent location");
+  });
+
+  socket.on('set', (msg) => {
+    console.log(`Got SET with ${msg} from socket client`);
+    const set_msg = JSON.parse(msg);
+    CURRENT_LOCATION = set_msg.location;
+  })
+
+  socket.on('disconnect', () => {
+    console.log('someone disconnected from socket');
+  })
+});
 
 // Start the server
 server.listen(PORT, () => {
