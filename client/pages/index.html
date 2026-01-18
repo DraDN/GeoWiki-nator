@@ -26,7 +26,6 @@
 
           <input type="range" min="100" max="1000" value="500" step="10" class="control-slider glow" id="searchRadiusSlider">
           <div class="control-value">
-            <!-- <span id="searchRadiusText"> </span><span> meters</span> -->
             <input class="glow-text glow" type="number" min="100" max="1000" value="500" id="searchRadiusText">
             <span> meters</span>
           </div>
@@ -39,7 +38,6 @@
 
           <input type="range" min="1" max="400" value="10" step="1" class="control-slider glow" id="searchLimitSlider">
           <div class="control-value">
-            <!-- <span id="searchLimitText"> </span><span> articles</span> -->
             <input class="glow-text glow" type="number" min="1" max="400" value="10" id="searchLimitText">
             <span> articles</span>
           </div>
@@ -48,9 +46,16 @@
         <!-- search submit button -->
         <button class="glow" id="searchButton"> Search </button>
 
-        <div class="search-status-container">
-          <span class="glow-text" id="status-label"> Search Status </span>
-          <div id="search-status-led"></div>
+        <div id="status-leds">
+          <div class="led-container">
+            <span class="glow-text" id="status-label"> Search Status </span>
+            <div id="search-status-led" class="blinking"></div>
+          </div>
+
+          <div class="led-container">
+            <span class="glow-text" id="location-ping-label"> Location Ping </span>
+            <div id="location-ping-led" class="blinking"></div>
+          </div>
         </div>
 
         <button class="glow" id="lock-on-button"> Lock On Target </button>
@@ -58,7 +63,6 @@
     </div>
   </div>
 
-  <!-- <script src="/design-tokens.js"></script> -->
   <link rel="stylesheet" href="/index.css">
   <script type="module" src="/index.js"></script>
 </body>

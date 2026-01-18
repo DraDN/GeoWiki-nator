@@ -13,6 +13,9 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 
 class Popups {
     #popups = [];
+    #popup_options = {
+        'className' : 'popup-custom glow-text'
+    };
 
     #create_text(title, description, link) {
         return `<b>${title}</b><br>${description}<br><a href="${link}">Link</a>`;
@@ -20,7 +23,7 @@ class Popups {
 
     add_popup(location, title, description, link) {
         const popup = L.marker(location, { icon: ICONS.MARKER_ICON });
-        popup.addTo(map).bindPopup(this.#create_text(title, description, link));
+        popup.addTo(map).bindPopup(this.#create_text(title, description, link), this.#popup_options);
 
         this.#popups.push(popup);
     }

@@ -18,22 +18,37 @@ utils.update_slider_fill_bar(search_limit_slider);
 let search_limit_text = document.getElementById("searchLimitText");
 utils.clamp_value(search_limit_text);
 
+// === BLINKING LEDS ===
+
+class BlinkLed {
+    #end = false;
+    #elem;
+
+    constructor(id) {
+        this.#elem = document.getElementById(id);
+
+        this.#elem.addEventListener('animationiteration', () => {
+            if (this.#end)
+                this.#elem.style.animationPlayState = 'paused';
+        });
+    }
+
+    set blink(status) {
+        if (status) 
+            this.#elem.style.animationPlayState = 'running';
+
+        this.#end = !status;
+    }
+}
+
+let search_status_led = new BlinkLed('search-status-led');
+let location_ping_led = new BlinkLed('location-ping-led');
 
 let search_button = document.getElementById("searchButton");
-let search_status_led = document.getElementById("search-status-led");
-
-// TODO: add status led for updating the location
 
 // === LOCK ON BOTTON ===
 
 let lock_on_button = document.getElementById("lock-on-button");
-
-function blink_status_led(status) {
-    if (status)
-        search_status_led.classList.add('blinking');
-    else
-        search_status_led.classList.remove('blinking');
-}
 
 // ===== CONFIG INTERFACE =====
 
@@ -54,6 +69,9 @@ function commit_limit_settings(value) {
     utils.set_slider_value_with_fill(search_limit_slider, value);
     search_limit_text.value = value;
 }
+
+commit_radius_settings(search_radius_slider.value);
+commit_limit_settings(search_limit_slider.value);
 
 // ===== EVENTS ======
 
@@ -114,6 +132,8 @@ search_button.addEventListener('click', function() {
 })
 
 export {
-    search_button,
-    blink_status_led
+    // search_button,
+    // blink_status_led,
+    search_status_led,
+    location_ping_led
 }
