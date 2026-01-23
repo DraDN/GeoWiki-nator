@@ -3,7 +3,9 @@
 
 Users can walk around with an [arduino device](#arduino-device) and, at a click away, have all of the [Wikipedia](https://wikipedia.com) articles relevent to the world around them displayed to them via a geeky local [webserver](#webserver).
 
-For more relevant information about both, click on [this for the arduino device](#arduino-device) or [this for the webserver](#webserver) to go their respecitve headers.
+For basic information about both, click on [this for the arduino device](#arduino-device) or [this for the webserver](#webserver) to go their respecitve headers.
+
+**To go more in depth, please check out the wiki of this project.**
 
 ![Website look](./images/WebsiteSS.png)
 
@@ -56,25 +58,5 @@ To start the webserver, run **inside the `./webserver/` directory**:
 `npm start`
 
 From this point, you can access the website at http://localhost:6969
-
-### Using the website
-
-On the right, we have the settings panel:
-
-![](./images/settings_ss_smaller.png)
-
-Here, "radius" means the search radius, while "limit" means the maximum number of articles to query from the wikipedia database.
-
-Press the "Search" button to submit the query and for the markers with wikipedia articles to appear on the map.
-
-The "Lock on Target" button simply focuses the map around the users location.
-
-Under "Search Status" and "Location Ping", 2 "lights" (white rectangles) will flash, signifing the search being in progress, respectively the users location being updated.
-
-On the left, we have the map:
-
-![](./images/map_ss_smaller.png)
-
-Where each marker represents a unique wikipedia article. Simply click on the marker to show the title and a small description of said article, alongside a link towards the full wikipedia page.
 
 </details>
