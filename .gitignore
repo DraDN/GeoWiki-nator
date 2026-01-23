@@ -1,3 +1,3 @@
-package-lock.json
-package.json
-node_modules/
+webserver/package-lock.json
+# package.json
+webserver/node_modules/
