@@ -5,7 +5,7 @@ Users can walk around with an [arduino device](#arduino-device) and, at a click 
 
 For basic information about both, click on [this for the arduino device](#arduino-device) or [this for the webserver](#webserver) to go their respecitve headers.
 
-**To go more in depth, please check out the wiki of this project.**
+**To go more in depth, please check out the [wiki of this project](https://github.com/DraDN/GeoWiki-nator/wiki).**
 
 ![Website look](./images/WebsiteSS.png)
 
