@@ -43,6 +43,8 @@ All of the code related to the webserver is inside the `./webserver/` folder of 
 *Node.js is required for this project.
 Click [here](https://nodejs.org/en/download) to see how to install Node.js*
 
+**Clone the repositry locally**.
+
 All required modules are already inside `package.json`, so,**whilst inside the `./webserver/` folder**, you just need to run:
 
 `npm install`
