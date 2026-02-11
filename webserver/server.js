@@ -1,3 +1,5 @@
+const { getLocation } = require('./locationState');
+
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -8,7 +10,6 @@ const PORT = 6969;
 const server = http.createServer(app);
 const io = new Server(server);
 
-let CURRENT_LOCATION = [44.4268, 26.1025];
 
 // === HOME PAGE ===
 app.get('/', (req, res) => {
@@ -51,15 +52,25 @@ app.get('/api', (req, res) => {
 
 // === WIKI API WRAPPER ===
 app.get('/api/get_wikis', async (req, res) => {
-  console.log(`got api request for wiki pages around ${req.query.lat}, ${req.query.lon}`);
+  let lat = req.query.lat;
+  let lon = req.query.lon;
+
+  if (!lat || !lon) {
+    const coords = getLocation();
+    lat = coords[0];
+    lon = coords[1];
+  }
+
+  console.log(`got api request for wiki pages around ${lat}, ${lon}`);
+  
   let wiki_params = {
     action: 'query',
     prop: 'coordinates|description|info',
     inprop: 'url',
     generator: 'geosearch',
-    ggsradius: req.query.radius, // this value is in meters (between 10 and 10,000)
-    ggslimit: req.query.limit,
-    ggscoord: req.query.lat + "|" + req.query.lon,
+    ggsradius: req.query.radius || 1000,
+    ggslimit: req.query.limit || 10,
+    ggscoord: lat + "|" + lon, // Folosim variabilele lat și lon setate mai sus
     format: 'json'
   };
   // let wiki_params_text = new URLSearchParams(wiki_params);
@@ -118,32 +129,36 @@ app.get('/api/get_wikis', async (req, res) => {
 let index = 0;
 
 // === SOCKET CONNECTIONS FOR LOCATION UPDATE ===
+const { setLocation } = require('./locationState'); // Adaugă și setter-ul aici dacă ai nevoie de socket 'set'
+
 io.on('connection', (socket) => {
   console.log('connection to socket');
 
   socket.on('get', async (callback) => {
     console.log(`Got GET from socket client`);
-
-    const tempdata = await fetch('http://localhost:6969/api');
-    const tempjson = await tempdata.json();
-    const temppoint = tempjson.locations[index++ %4].point;
-
+    
+    // Trimitem locația live de la GPS
     callback({
-      // location: CURRENT_LOCATION
-      location: temppoint
+      location: getLocation()
     });
-    console.log("sent location");
+    
+    console.log("sent live location");
   });
 
   socket.on('set', (msg) => {
     console.log(`Got SET with ${msg} from socket client`);
-    const set_msg = JSON.parse(msg);
-    CURRENT_LOCATION = set_msg.location;
-  })
+    try {
+      const set_msg = JSON.parse(msg);
+      // Folosim setter-ul din locationState în loc de variabila locală
+      setLocation(set_msg.location[0], set_msg.location[1]);
+    } catch (e) {
+      console.error("Error setting location via socket:", e);
+    }
+  });
 
   socket.on('disconnect', () => {
     console.log('someone disconnected from socket');
-  })
+  });
 });
 
 // Start the server
