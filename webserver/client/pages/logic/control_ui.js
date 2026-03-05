@@ -43,6 +43,7 @@ class BlinkLed {
 
 let search_status_led = new BlinkLed('search-status-led');
 let location_ping_led = new BlinkLed('location-ping-led');
+let gps_connected_led = new BlinkLed('gps-connect-led');
 
 let search_button = document.getElementById("searchButton");
 
@@ -132,8 +133,7 @@ search_button.addEventListener('click', function() {
 })
 
 export {
-    // search_button,
-    // blink_status_led,
     search_status_led,
-    location_ping_led
+    location_ping_led,
+    gps_connected_led
 }

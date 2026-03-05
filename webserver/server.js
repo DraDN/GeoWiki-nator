@@ -95,6 +95,13 @@ app.get('/api/get_wikis', async (req, res) => {
   }
 });
 
+// === GPS CONNECTION STATUS API ===
+app.get("/api/gps-status", (req, res) => {
+  res.json({
+    connected: port_listener_process.get_arduino_connection()
+  })
+});
+
 // === SOCKET CONNECTIONS FOR LOCATION UPDATE ===
 const { setLocation } = require('./locationState'); // Adaugă și setter-ul aici dacă ai nevoie de socket 'set'
 

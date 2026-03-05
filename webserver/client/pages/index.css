@@ -148,7 +148,7 @@ hr {
     width: 100%;
 }
 
-#search-status-led, #location-ping-led {
+#search-status-led, #location-ping-led, #gps-connect-led {
     opacity: 0%;
     height: 50%;
     margin-top: 1em;

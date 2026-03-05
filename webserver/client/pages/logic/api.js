@@ -4,6 +4,25 @@ import * as control_ui from './control_ui.js'
 
 const socket = io();
 
+async function update_gps_connection_status() {
+    // control_ui.location_ping_led.blink = true;
+
+    // const resp = await new Promise(resolve => socket.emit('get', resolve));
+    const resp = await fetch("/api/gps-status");
+    const resp_json = await resp.json();
+
+    control_ui.gps_connected_led.blink = resp_json.connected;
+    console.log("gps status: ", resp_json.connected);
+
+    // CONFIG.CURRENT_LOCATION = resp.location;
+    // map_ui.search_circle.update_location();
+
+    // console.log('got point', resp.location)
+    // console.log('set config to ', CONFIG.CURRENT_LOCATION)
+
+    // control_ui.location_ping_led.blink = false;
+}
+
 async function update_location() {
     control_ui.location_ping_led.blink = true;
 
@@ -51,5 +70,6 @@ async function fetch_data() {
 
 export {
     fetch_data,
-    update_location
+    update_location,
+    update_gps_connection_status
 }
