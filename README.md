@@ -51,6 +51,16 @@ All required modules are already inside `package.json`, so,**whilst inside the `
 
 After that, everything should be set up.
 
+#### Dependencies
+
+The webserver uses:
+* Node.js packages:
+    * express
+    * serialport
+    * socket.io
+* Leaflet map embed
+    * OpenStreetMap and CARTO tile map layers
+
 ## Usage
 
 ### Start the server

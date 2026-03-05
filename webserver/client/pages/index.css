@@ -9,7 +9,6 @@
 .glow-text {
     text-shadow:
      0 0 10px #fff,
-     /* 0 0 20px #fff,  */
      0 0 30px var(--text-color),
      0 0 40px var(--text-color), 
      0 0 50px var(--text-color),
@@ -22,7 +21,6 @@
     border-color: #fff;
     box-shadow:
      0 0 10px #fff,
-     /* 0 0 20px #fff,  */
      0 0 30px var(--text-color),
      0 0 40px var(--text-color), 
      0 0 50px var(--text-color),
@@ -175,7 +173,6 @@ hr {
         background-color: #fff;
         box-shadow:
             0 0 10px #fff,
-            /* 0 0 20px #fff,  */
             0 0 30px var(--text-color),
             0 0 40px var(--text-color), 
             0 0 50px var(--text-color),

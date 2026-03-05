@@ -1,4 +1,4 @@
-const { getLocation } = require('./locationState');
+const { getLocation } = require('./locationState.js');
 
 const express = require('express');
 const http = require('http');
@@ -10,6 +10,7 @@ const PORT = 6969;
 const server = http.createServer(app);
 const io = new Server(server);
 
+const port_listener_process = require("./getDataFromSerial.js");
 
 // === HOME PAGE ===
 app.get('/', (req, res) => {
@@ -24,41 +25,13 @@ app.get('/marius.jpg', (req, res) => {
   res.sendFile(__dirname + "/client/images/marius.jpg")
 });
 
-// === API ===
-app.get('/api', (req, res) => {
-  res.json(
-    {
-        "message": "megalocatii",
-        "locations": [
-          {
-          "name": "uwu1",
-          "point": [44.4268, 26.1025]
-          },
-          {
-          "name": "uwu2",
-          "point": [44.4268, 26.1525]
-          },
-          {
-          "name": "uwu3",
-          "point": [44.4768, 26.1525]
-          },     
-          {
-          "name": "uwu4",
-          "point": [44.4768, 26.1025]
-          },      
-        ]
-    });
-});
-
 // === WIKI API WRAPPER ===
 app.get('/api/get_wikis', async (req, res) => {
-  let lat = req.query.lat;
-  let lon = req.query.lon;
+  const lat = req.query.lat;
+  const lon = req.query.lon;
 
   if (!lat || !lon) {
-    const coords = getLocation();
-    lat = coords[0];
-    lon = coords[1];
+    return;
   }
 
   console.log(`got api request for wiki pages around ${lat}, ${lon}`);
@@ -73,9 +46,6 @@ app.get('/api/get_wikis', async (req, res) => {
     ggscoord: lat + "|" + lon, // Folosim variabilele lat și lon setate mai sus
     format: 'json'
   };
-  // let wiki_params_text = new URLSearchParams(wiki_params);
-  // let wiki_api_url = `https://en.wikipedia.org/w/api.php?${wiki_params_text}`;
-  // console.log(wiki_api_url);
   
   let result_data = {};
   let continue_query_params = {};
@@ -121,12 +91,9 @@ app.get('/api/get_wikis', async (req, res) => {
     res.status(500).json( {
       error: `API fetch failed for ${req.query.lat} and ${req.query.lon}`,
       error_message: `${error}`,
-      // wiki_url: wiki_api_url
     } );
   }
 });
-
-let index = 0;
 
 // === SOCKET CONNECTIONS FOR LOCATION UPDATE ===
 const { setLocation } = require('./locationState'); // Adaugă și setter-ul aici dacă ai nevoie de socket 'set'

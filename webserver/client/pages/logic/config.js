@@ -1,6 +1,6 @@
 let CONFIG = {
     CURRENT_LOCATION: [44.4268, 26.1025],
-    LOCATION_PING_DELAY: 10000, // in milliseconds
+    LOCATION_PING_DELAY: 1000, // in milliseconds
 
     ZOOM: 13,
 
