@@ -9,12 +9,46 @@ For basic information about both, click on [this for the arduino device](#arduin
 
 ![Website look](./images/WebsiteSS.png)
 
-# Arduino device
+
+## 🔌 Arduino device
+
+
 
 <details>
 <summary>
 click here to expand
 </summary>
+Acest modul hardware acționează ca unitate centrală de **colectare** a datelor pentru sistemul Wikinator. Rolul său este de a intercepta coordonatele geografice și de a oferi feedback vizual utilizatorului.
+
+### ⚙️ Mod de funcționare
+
+* **Localizare:** Modulul GPS recepționează semnale de la sateliți pentru a determina latitudinea și longitudinea curentă.
+* **Procesare:** Arduino preia datele brute de la GPS (prin protocol serial), le procesează și le trimite către serverul web pentru a fi mapate.
+* **Feedback Vizual:** Cele 3 LED-uri indică starea sistemului:
+    * 🔵 **LED 1:** Căutare semnal GPS.
+    * 🟢 **LED 2:** Conexiune activă la server / Date trimise cu succes.
+    * 🔴 **LED 3:** Eroare sistem sau lipsă semnal.
+
+### 🛠️ Conectare (Wiring)
+
+Pentru a asambla dispozitivul, urmează schema de cablare respectând aceste conexiuni:
+
+#### **GPS Module**
+| Pin GPS | Pin Arduino | Notă |
+| :--- | :--- | :--- |
+| **VCC** | 5V | Alimentare |
+| **GND** | GND | Împământare |
+| **TX** | D3 | Transmisie Date (SoftwareSerial) |
+| **RX** | D4 | Recepție Date (SoftwareSerial) |
+
+#### **LED-uri**
+* Fiecare LED trebuie conectat în serie cu un **rezistor de 220Ω** pentru a preveni arderea.
+* **Anodul** (piciorușul lung) se conectează la pinii digitali (ex: D8, D9, D10).
+* **Catodul** (piciorușul scurt) se conectează la **GND**.
+
+#### **Alimentare**
+* Prin cablu **USB tip B** conectat la computer sau la o sursă de alimentare externă (Power Bank/Adaptor 5V).
+
 
 ## Installing
 Components needed:
